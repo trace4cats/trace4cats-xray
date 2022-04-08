@@ -1,0 +1,7 @@
+version: "3.8"
+services:
+  xray:
+    image: amazon/aws-xray-daemon:3.3.3
+    ports:
+      - "2000:2000/udp"
+    command: -o -n us-east-2
