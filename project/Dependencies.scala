@@ -19,8 +19,8 @@ object Dependencies {
   lazy val trace4catsKernel = "io.janstenpickle"         %% "trace4cats-kernel"          % Versions.trace4cats
   lazy val trace4catsModel = "io.janstenpickle"          %% "trace4cats-model"           % Versions.trace4cats
 
-  lazy val circeGeneric = "io.circe" %% "circe-generic" % Versions.circe
-  lazy val fs2Io = "co.fs2"          %% "fs2-io"        % Versions.fs2
+  lazy val circeCore = "io.circe" %% "circe-core" % Versions.circe
+  lazy val fs2Io = "co.fs2"       %% "fs2-io"     % Versions.fs2
 
   lazy val kindProjector = ("org.typelevel" % "kind-projector"     % Versions.kindProjector).cross(CrossVersion.full)
   lazy val betterMonadicFor = "com.olegpy" %% "better-monadic-for" % Versions.betterMonadicFor

@@ -39,10 +39,10 @@ lazy val `xray-udp-exporter` =
     .settings(
       name := "trace4cats-xray-udp-exporter",
       libraryDependencies ++= Seq(
-        Dependencies.circeGeneric,
+        Dependencies.circeCore,
         Dependencies.fs2Io,
-        Dependencies.trace4catsModel,
         Dependencies.trace4catsKernel,
+        Dependencies.trace4catsModel,
         Dependencies.trace4catsExporterCommon
       )
     )
