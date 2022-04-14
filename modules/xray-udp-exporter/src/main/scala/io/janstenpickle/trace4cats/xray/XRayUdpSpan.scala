@@ -27,7 +27,7 @@ private[xray] object XRayUdpSpan {
     * See the `name` documentation under "Required Segment Fields"
     * https://docs.aws.amazon.com/xray/latest/devguide/xray-api-segmentdocuments.html#api-segmentdocuments-fields
     */
-  private val nameRegex: Regex = """[^\p{L}0-9 _\.:/%&#=\+\-@]""".r
+  private val nameIllegalCharRegex: Regex = """[^\p{L}0-9 _.:/%&#=\\+\-@]""".r
 
   /** Annotation keys must be alphanumeric in order to work with filters. Underscore is allowed. Other symbols and
     * whitespace are not allowed.
@@ -35,7 +35,7 @@ private[xray] object XRayUdpSpan {
     * See the documentation under "Annotations"
     * https://docs.aws.amazon.com/xray/latest/devguide/xray-api-segmentdocuments.html#api-segmentdocuments-annotations
     */
-  private val keyRegex: Regex = """[^A-Za-z0-9_]""".r
+  private val keyIllegalCharRegex: Regex = """[^A-Za-z0-9_]""".r
 
   private implicit val attributeValueEncoder: Encoder[AttributeValue] = Encoder.instance {
     case AttributeValue.StringValue(value) => Json.fromString(value.value)
@@ -109,8 +109,8 @@ private[xray] object XRayUdpSpan {
     childSpans: Ref[F, Map[TraceId, NonEmptyList[CompletedSpan]]]
   ): F[JsonObject] = {
     val (badName: Option[String], goodName: String) =
-      if (nameRegex.findFirstMatchIn(span.name).isDefined)
-        (Some(span.name), nameRegex.replaceAllIn(span.name, "_"))
+      if (nameIllegalCharRegex.findFirstMatchIn(span.name).isDefined)
+        (Some(span.name), nameIllegalCharRegex.replaceAllIn(span.name, "_"))
       else
         (None, span.name)
 
@@ -118,11 +118,11 @@ private[xray] object XRayUdpSpan {
       (process.fold(Map.empty[String, AttributeValue])(_.attributes) ++ span.allAttributes ++ statusTags(
         span.status
       ) ++ SemanticTags.kindTags(span.kind)).partition { case (k, _) =>
-        keyRegex.findFirstMatchIn(k).isDefined
+        keyIllegalCharRegex.findFirstMatchIn(k).isDefined
       }
 
     val fixedAnnotations = badKeys.map { case (k, v) =>
-      keyRegex.replaceAllIn(k, "_") -> v
+      keyIllegalCharRegex.replaceAllIn(k, "_") -> v
     }
     val allAnnotations: Map[String, AttributeValue] =
       goodKeys ++
