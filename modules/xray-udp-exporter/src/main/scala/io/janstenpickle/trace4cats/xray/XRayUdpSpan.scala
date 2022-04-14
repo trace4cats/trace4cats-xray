@@ -2,7 +2,7 @@ package io.janstenpickle.trace4cats.xray
 
 import cats.{Applicative, Eval, Functor, Monad}
 import cats.data.NonEmptyList
-import cats.effect.{Clock, Ref}
+import cats.effect.kernel.{Clock, Ref}
 import cats.effect.std.Random
 import cats.syntax.applicative._
 import cats.syntax.apply._
@@ -54,7 +54,7 @@ private[xray] object XRayUdpSpan {
     * https://docs.aws.amazon.com/xray/latest/devguide/xray-api-segmentdocuments.html#api-segmentdocuments-fields
     */
   private def toEpochSeconds(i: Instant): Double =
-    ChronoUnit.MICROS.between(Instant.EPOCH, i).toDouble / 1000000
+    ChronoUnit.MICROS.between(Instant.EPOCH, i).toDouble / 1000_000
 
   private def randomHexString[F[_]: Functor: Random](bytes: Int): F[String] =
     Random[F]
