@@ -2,7 +2,7 @@ package io.janstenpickle.trace4cats.xray
 
 import cats.Foldable
 import cats.data.NonEmptyList
-import cats.effect.{Async, Deferred, Ref, Resource}
+import cats.effect.kernel.{Async, Deferred, Ref, Resource}
 import cats.effect.std.Random
 import cats.syntax.applicative._
 import cats.syntax.apply._
@@ -13,6 +13,7 @@ import fs2.Chunk
 import fs2.io.net.{Datagram, Network}
 import io.janstenpickle.trace4cats.kernel.SpanExporter
 import io.janstenpickle.trace4cats.model.{Batch, CompletedSpan, TraceId, TraceProcess}
+
 import java.nio.charset.StandardCharsets
 
 object XRayUdpSpanExporter {
