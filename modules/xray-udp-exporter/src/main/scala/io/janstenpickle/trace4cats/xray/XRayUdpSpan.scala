@@ -54,7 +54,7 @@ private[xray] object XRayUdpSpan {
     * https://docs.aws.amazon.com/xray/latest/devguide/xray-api-segmentdocuments.html#api-segmentdocuments-fields
     */
   private def toEpochSeconds(i: Instant): Double =
-    ChronoUnit.MICROS.between(Instant.EPOCH, i).toDouble / 1000_000
+    ChronoUnit.MICROS.between(Instant.EPOCH, i).toDouble / 1000000
 
   private def spanStatusFaultJson[F[_]: Applicative: XRayExceptionId.Gen](status: SpanStatus): F[JsonObject] =
     XRayExceptionId.gen[F].map { id =>
